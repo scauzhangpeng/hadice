@@ -3,6 +3,7 @@ package hdc
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -416,4 +417,24 @@ func fetchAndUpdateAppList(ctx context.Context, connectKey string, filter string
 
 func GetAppListIncremental(ctx context.Context, connectKey string, filter string) (*AppListResult, error) {
 	return GetAppListWithDiskCache(ctx, connectKey, filter)
+}
+
+// ListBundles 只拉取已安装应用清单（bm dump -a -l），不附带运行态。
+//
+// 与 GetAppList 的差别仅在于省掉并行执行的 `ps -A`：鸿蒙的 ps -A 只列与
+// shell 同 uid 的进程，应用进程根本不在其中，那一次调用拿不到任何有用信息。
+// 需要运行态时由调用方改用 RunningPackages（走 ps -ef）。
+func ListBundles(connectKey string) ([]AppInfo, error) {
+	res, err := ExecuteHdcWithTimeout(
+		[]string{"-t", connectKey, "shell", "bm", "dump", "-a", "-l"}, 20*time.Second)
+	if err != nil {
+		return nil, err
+	}
+	if res == nil {
+		return nil, fmt.Errorf("bm dump 无返回")
+	}
+	if !res.Success || strings.TrimSpace(res.Output) == "" {
+		return nil, fmt.Errorf("bm dump 执行失败: %s", strings.TrimSpace(res.Error))
+	}
+	return parseAppList(res.Output), nil
 }

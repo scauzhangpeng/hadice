@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/layout/Sidebar'
 import { Footer } from '@/components/layout/Footer'
 import { useNavigationStore } from '@/store/navigationStore'
 import { UpdateDialog } from '@/components/dialogs/UpdateDialog'
+import { McpApprovalDialog } from '@/components/mcp/McpApprovalDialog'
 import * as BackendApp from '../bindings/Hadice/backend/appservice'
 import { EventsOn } from '../wailsjs/runtime/runtime'
 import { UPDATE_CHECK_URL } from '@/lib/config'
@@ -42,7 +43,8 @@ import {
   AIAutomationPage,
   HandyToolsPage,
   WebPeekPage,
-  WebPeekViewerPage
+  WebPeekViewerPage,
+  McpServicePage
 } from '@/pages'
 
 /**
@@ -133,6 +135,9 @@ function renderPage(
       break
     case 'web-peek-viewer':
       page = <WebPeekViewerPage />
+      break
+    case 'mcp-server':
+      page = <McpServicePage />
       break
     default:
       page = <DeviceOverviewPage />
@@ -426,6 +431,9 @@ function App(): React.JSX.Element {
       
       {/* Toast通知 */}
       <Toaster position="top-center" theme={theme} />
+
+      {/* MCP 高危工具审批弹窗：后端推 mcp:approval 事件时出现 */}
+      <McpApprovalDialog />
 
       {/* 更新提示对话框 */}
       {updateInfo && (

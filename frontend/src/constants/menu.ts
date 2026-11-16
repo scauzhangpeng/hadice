@@ -15,7 +15,8 @@ import {
   Bot,
   Boxes,
   Wrench,
-  ExternalLink
+  ExternalLink,
+  Server
 } from 'lucide-react'
 /**
  * 菜单项配置
@@ -39,7 +40,8 @@ export const menuItems = [
   { id: 'hdc-shell', label: '终端命令', icon: Terminal },
   { id: 'ai-automation', label: 'AI自动化', icon: Bot },
   { id: 'handy-tools', label: '便捷工具', icon: Wrench },
-  { id: 'web-peek', label: '网页看看', icon: ExternalLink }
+  { id: 'web-peek', label: '网页看看', icon: ExternalLink },
+  { id: 'mcp-server', label: 'MCP 服务', icon: Server }
 ] as const
 
 export type MenuItemId = (typeof menuItems)[number]['id']

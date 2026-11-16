@@ -52,6 +52,8 @@ func Run(assets embed.FS) error {
 		LogLevel:    4,
 		Services: []application.Service{
 			application.NewService(NewAppService(nil)),
+			// MCP 设置页服务（状态/开关/审批/审计），实现在 backend/mcp_service.go
+			application.NewService(NewMCPService()),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

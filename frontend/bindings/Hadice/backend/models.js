@@ -12,6 +12,9 @@ import * as device$0 from "./device/models.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: Unused imports
 import * as hdc$0 from "./hdc/models.js";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore: Unused imports
+import * as mcpserver$0 from "./mcpserver/models.js";
 
 export class CommandResult {
     /**
@@ -311,6 +314,234 @@ export class InstallAttemptResult {
 }
 
 /**
+ * MCPCheckItem 是一项自检结果。
+ */
+export class MCPCheckItem {
+    /**
+     * Creates a new MCPCheckItem instance.
+     * @param {Partial<MCPCheckItem>} [$$source = {}] - The source object to create the MCPCheckItem.
+     */
+    constructor($$source = {}) {
+        if (!("name" in $$source)) {
+            /**
+             * @member
+             * @type {string}
+             */
+            this["name"] = "";
+        }
+        if (!("ok" in $$source)) {
+            /**
+             * @member
+             * @type {boolean}
+             */
+            this["ok"] = false;
+        }
+        if (!("detail" in $$source)) {
+            /**
+             * @member
+             * @type {string}
+             */
+            this["detail"] = "";
+        }
+        if (/** @type {any} */(false)) {
+            /**
+             * @member
+             * @type {string | undefined}
+             */
+            this["hint"] = undefined;
+        }
+
+        Object.assign(this, $$source);
+    }
+
+    /**
+     * Creates a new MCPCheckItem instance from a string or object.
+     * @param {any} [$$source = {}]
+     * @returns {MCPCheckItem}
+     */
+    static createFrom($$source = {}) {
+        let $$parsedSource = typeof $$source === 'string' ? JSON.parse($$source) : $$source;
+        return new MCPCheckItem(/** @type {Partial<MCPCheckItem>} */($$parsedSource));
+    }
+}
+
+/**
+ * MCPClientUsage 是按调用方聚合的使用统计（来自审计）。
+ */
+export class MCPClientUsage {
+    /**
+     * Creates a new MCPClientUsage instance.
+     * @param {Partial<MCPClientUsage>} [$$source = {}] - The source object to create the MCPClientUsage.
+     */
+    constructor($$source = {}) {
+        if (!("client" in $$source)) {
+            /**
+             * @member
+             * @type {string}
+             */
+            this["client"] = "";
+        }
+        if (!("calls" in $$source)) {
+            /**
+             * @member
+             * @type {number}
+             */
+            this["calls"] = 0;
+        }
+        if (!("last" in $$source)) {
+            /**
+             * @member
+             * @type {string}
+             */
+            this["last"] = "";
+        }
+
+        Object.assign(this, $$source);
+    }
+
+    /**
+     * Creates a new MCPClientUsage instance from a string or object.
+     * @param {any} [$$source = {}]
+     * @returns {MCPClientUsage}
+     */
+    static createFrom($$source = {}) {
+        let $$parsedSource = typeof $$source === 'string' ? JSON.parse($$source) : $$source;
+        return new MCPClientUsage(/** @type {Partial<MCPClientUsage>} */($$parsedSource));
+    }
+}
+
+/**
+ * MCPOverview 是设置页首屏所需的全部数据。
+ */
+export class MCPOverview {
+    /**
+     * Creates a new MCPOverview instance.
+     * @param {Partial<MCPOverview>} [$$source = {}] - The source object to create the MCPOverview.
+     */
+    constructor($$source = {}) {
+        if (!("status" in $$source)) {
+            /**
+             * @member
+             * @type {mcpserver$0.Status}
+             */
+            this["status"] = (new mcpserver$0.Status());
+        }
+        if (!("settings" in $$source)) {
+            /**
+             * @member
+             * @type {mcpserver$0.Settings}
+             */
+            this["settings"] = (new mcpserver$0.Settings());
+        }
+        if (!("templates" in $$source)) {
+            /**
+             * @member
+             * @type {mcpserver$0.Template[]}
+             */
+            this["templates"] = [];
+        }
+        if (!("bridgePath" in $$source)) {
+            /**
+             * @member
+             * @type {string}
+             */
+            this["bridgePath"] = "";
+        }
+        if (!("bridgeExists" in $$source)) {
+            /**
+             * @member
+             * @type {boolean}
+             */
+            this["bridgeExists"] = false;
+        }
+        if (!("clients" in $$source)) {
+            /**
+             * @member
+             * @type {MCPClientUsage[]}
+             */
+            this["clients"] = [];
+        }
+
+        Object.assign(this, $$source);
+    }
+
+    /**
+     * Creates a new MCPOverview instance from a string or object.
+     * @param {any} [$$source = {}]
+     * @returns {MCPOverview}
+     */
+    static createFrom($$source = {}) {
+        const $$createField0_0 = $$createType1;
+        const $$createField1_0 = $$createType2;
+        const $$createField2_0 = $$createType4;
+        const $$createField5_0 = $$createType6;
+        let $$parsedSource = typeof $$source === 'string' ? JSON.parse($$source) : $$source;
+        if ("status" in $$parsedSource) {
+            $$parsedSource["status"] = $$createField0_0($$parsedSource["status"]);
+        }
+        if ("settings" in $$parsedSource) {
+            $$parsedSource["settings"] = $$createField1_0($$parsedSource["settings"]);
+        }
+        if ("templates" in $$parsedSource) {
+            $$parsedSource["templates"] = $$createField2_0($$parsedSource["templates"]);
+        }
+        if ("clients" in $$parsedSource) {
+            $$parsedSource["clients"] = $$createField5_0($$parsedSource["clients"]);
+        }
+        return new MCPOverview(/** @type {Partial<MCPOverview>} */($$parsedSource));
+    }
+}
+
+/**
+ * MCPSelfCheck 是一次自检的完整结果。
+ */
+export class MCPSelfCheck {
+    /**
+     * Creates a new MCPSelfCheck instance.
+     * @param {Partial<MCPSelfCheck>} [$$source = {}] - The source object to create the MCPSelfCheck.
+     */
+    constructor($$source = {}) {
+        if (!("ok" in $$source)) {
+            /**
+             * @member
+             * @type {boolean}
+             */
+            this["ok"] = false;
+        }
+        if (!("time" in $$source)) {
+            /**
+             * @member
+             * @type {string}
+             */
+            this["time"] = "";
+        }
+        if (!("items" in $$source)) {
+            /**
+             * @member
+             * @type {MCPCheckItem[]}
+             */
+            this["items"] = [];
+        }
+
+        Object.assign(this, $$source);
+    }
+
+    /**
+     * Creates a new MCPSelfCheck instance from a string or object.
+     * @param {any} [$$source = {}]
+     * @returns {MCPSelfCheck}
+     */
+    static createFrom($$source = {}) {
+        const $$createField2_0 = $$createType8;
+        let $$parsedSource = typeof $$source === 'string' ? JSON.parse($$source) : $$source;
+        if ("items" in $$parsedSource) {
+            $$parsedSource["items"] = $$createField2_0($$parsedSource["items"]);
+        }
+        return new MCPSelfCheck(/** @type {Partial<MCPSelfCheck>} */($$parsedSource));
+    }
+}
+
+/**
  * NetworkRequest 网络请求数据
  */
 export class NetworkRequest {
@@ -472,8 +703,8 @@ export class NetworkRequest {
     static createFrom($$source = {}) {
         const $$createField6_0 = $$createType0;
         const $$createField7_0 = $$createType0;
-        const $$createField12_0 = $$createType2;
-        const $$createField13_0 = $$createType3;
+        const $$createField12_0 = $$createType10;
+        const $$createField13_0 = $$createType11;
         let $$parsedSource = typeof $$source === 'string' ? JSON.parse($$source) : $$source;
         if ("requestHeaders" in $$parsedSource) {
             $$parsedSource["requestHeaders"] = $$createField6_0($$parsedSource["requestHeaders"]);
@@ -627,7 +858,7 @@ export class PreparedInstallPackage {
      * @returns {PreparedInstallPackage}
      */
     static createFrom($$source = {}) {
-        const $$createField1_0 = $$createType5;
+        const $$createField1_0 = $$createType13;
         let $$parsedSource = typeof $$source === 'string' ? JSON.parse($$source) : $$source;
         if ("info" in $$parsedSource) {
             $$parsedSource["info"] = $$createField1_0($$parsedSource["info"]);
@@ -771,8 +1002,8 @@ export class ProcessListResult {
      * @returns {ProcessListResult}
      */
     static createFrom($$source = {}) {
-        const $$createField0_0 = $$createType6;
-        const $$createField1_0 = $$createType8;
+        const $$createField0_0 = $$createType14;
+        const $$createField1_0 = $$createType16;
         let $$parsedSource = typeof $$source === 'string' ? JSON.parse($$source) : $$source;
         if ("stats" in $$parsedSource) {
             $$parsedSource["stats"] = $$createField0_0($$parsedSource["stats"]);
@@ -926,7 +1157,7 @@ export class ShellUIState {
      * @returns {ShellUIState}
      */
     static createFrom($$source = {}) {
-        const $$createField0_0 = $$createType10;
+        const $$createField0_0 = $$createType18;
         const $$createField3_0 = $$createType0;
         let $$parsedSource = typeof $$source === 'string' ? JSON.parse($$source) : $$source;
         if ("tabs" in $$parsedSource) {
@@ -1151,13 +1382,21 @@ export class WirelessDebugResult {
 
 // Private type creation functions
 const $$createType0 = $Create.Map($Create.Any, $Create.Any);
-const $$createType1 = HttpExtra.createFrom;
-const $$createType2 = $Create.Nullable($$createType1);
-const $$createType3 = $Create.Map($Create.Any, $Create.Any);
-const $$createType4 = hdc$0.InstallPackageInfo.createFrom;
-const $$createType5 = $Create.Nullable($$createType4);
-const $$createType6 = ProcessStats.createFrom;
-const $$createType7 = ProcessInfoUI.createFrom;
+const $$createType1 = mcpserver$0.Status.createFrom;
+const $$createType2 = mcpserver$0.Settings.createFrom;
+const $$createType3 = mcpserver$0.Template.createFrom;
+const $$createType4 = $Create.Array($$createType3);
+const $$createType5 = MCPClientUsage.createFrom;
+const $$createType6 = $Create.Array($$createType5);
+const $$createType7 = MCPCheckItem.createFrom;
 const $$createType8 = $Create.Array($$createType7);
-const $$createType9 = ShellTabInfo.createFrom;
-const $$createType10 = $Create.Array($$createType9);
+const $$createType9 = HttpExtra.createFrom;
+const $$createType10 = $Create.Nullable($$createType9);
+const $$createType11 = $Create.Map($Create.Any, $Create.Any);
+const $$createType12 = hdc$0.InstallPackageInfo.createFrom;
+const $$createType13 = $Create.Nullable($$createType12);
+const $$createType14 = ProcessStats.createFrom;
+const $$createType15 = ProcessInfoUI.createFrom;
+const $$createType16 = $Create.Array($$createType15);
+const $$createType17 = ShellTabInfo.createFrom;
+const $$createType18 = $Create.Array($$createType17);

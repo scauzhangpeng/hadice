@@ -19,4 +19,5 @@ export { AIAutomationPage } from './AIAutomationPage'
 export { HandyToolsPage } from './HandyToolsPage'
 export { WebPeekPage } from './WebPeekPage'
 export { WebPeekViewerPage } from './WebPeekViewerPage'
+export { McpServicePage } from './McpServicePage'
 

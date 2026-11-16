@@ -163,34 +163,94 @@ func extractVersionInfo(data map[string]interface{}) (string, int) {
 }
 
 // findLauncherAbility 查找应用的 launcher ability
+// findLauncherAbility 从 `bm dump -n <bundle>` 的 JSON 里解析入口 ability 名。
+//
+// 解析优先级（踩过的坑决定了这个顺序）：
+//  1. skills 里声明了 action.system.home / entity.system.home 的 ability ——
+//     这才是"点图标进入"的真正入口。鸿蒙 7（API 26）上 isLauncherAbility
+//     对真正的入口 ability 也返回 false，只看该字段会误判。
+//  2. isLauncherAbility == true —— 老版本系统（API 9~12）的标记方式。
+//  3. entry 模块的 mainAbility 字段 —— 免安装/元服务常见，没有 skills。
+//  4. 首个 ability —— 兜底，可能启动失败，但至少给出一个可用的名字。
 func findLauncherAbility(data map[string]interface{}) string {
-	if hapModules, ok := data["hapModuleInfos"].([]interface{}); ok {
-		for _, module := range hapModules {
-			if moduleMap, ok := module.(map[string]interface{}); ok {
-				if abilities, ok := moduleMap["abilityInfos"].([]interface{}); ok {
-					// 优先查找 launcher ability
-					for _, ability := range abilities {
-						if abilityMap, ok := ability.(map[string]interface{}); ok {
-							if isLauncher, ok := abilityMap["isLauncherAbility"].(bool); ok && isLauncher {
-								if name, ok := abilityMap["name"].(string); ok && name != "" {
-									return name
-								}
-							}
-						}
-					}
-					// 如果没有找到 launcher ability，使用第一个 ability
-					if len(abilities) > 0 {
-						if firstAbility, ok := abilities[0].(map[string]interface{}); ok {
-							if name, ok := firstAbility["name"].(string); ok && name != "" {
-								return name
-							}
-						}
-					}
+	hapModules, ok := data["hapModuleInfos"].([]interface{})
+	if !ok {
+		return ""
+	}
+	entryModule, _ := data["entryModuleName"].(string)
+
+	var bySkill, byFlag, byEntryMain, first string
+	for _, module := range hapModules {
+		moduleMap, ok := module.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		moduleName, _ := moduleMap["name"].(string)
+		mainAbility, _ := moduleMap["mainAbility"].(string)
+		abilities, ok := moduleMap["abilityInfos"].([]interface{})
+		if !ok {
+			continue
+		}
+		for _, ability := range abilities {
+			abilityMap, ok := ability.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			name, _ := abilityMap["name"].(string)
+			if name == "" {
+				continue
+			}
+			if first == "" {
+				first = name
+			}
+			if isLauncher, ok := abilityMap["isLauncherAbility"].(bool); ok && isLauncher && byFlag == "" {
+				byFlag = name
+			}
+			if bySkill == "" && hasHomeSkill(abilityMap) {
+				bySkill = name
+			}
+			if byEntryMain == "" && mainAbility != "" && name == mainAbility &&
+				(entryModule == "" || moduleName == entryModule) {
+				byEntryMain = name
+			}
+		}
+	}
+	switch {
+	case bySkill != "":
+		return bySkill
+	case byFlag != "":
+		return byFlag
+	case byEntryMain != "":
+		return byEntryMain
+	default:
+		return first
+	}
+}
+
+// hasHomeSkill 判断 ability 的 skills 是否声明了桌面入口（action/entity.system.home）。
+func hasHomeSkill(ability map[string]interface{}) bool {
+	skills, ok := ability["skills"].([]interface{})
+	if !ok {
+		return false
+	}
+	for _, skill := range skills {
+		skillMap, ok := skill.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		for _, key := range []string{"actions", "entities"} {
+			list, ok := skillMap[key].([]interface{})
+			if !ok {
+				continue
+			}
+			for _, item := range list {
+				if s, ok := item.(string); ok && strings.Contains(s, "system.home") {
+					return true
 				}
 			}
 		}
 	}
-	return ""
+	return false
 }
 
 // StartApp 启动应用

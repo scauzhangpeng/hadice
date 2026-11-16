@@ -623,6 +623,45 @@ export const helpContentMap: Record<MenuItemId, HelpContent> = {
     ]
   },
 
+  'mcp-server': {
+    description:
+      'MCP 服务页面展示 Hadice 内嵌的 MCP 端点状态，供 WorkBuddy、Codex 等 AI 客户端接入后直接操控已连接设备（启动应用、截图、读日志、安装 APK、点按滑动）。',
+    sections: [
+      {
+        title: '接入方式',
+        content:
+          '推荐 stdio：在客户端里把 command 指向 App 包内的 hadice-mcp 二进制，它会自动发现运行中的 App；只有必须填 URL 的客户端才用 HTTP 端点（需要带上 token）。页面里可以按客户端选择模板并一键复制。'
+      },
+      {
+        title: '能力与审批',
+        content:
+          '工具按设备/应用/包管理/输入分组，可单独停用。安装、卸载、清除数据属于高危操作，默认需要确认：客户端发起的调用会挂起，在 Hadice 窗口里点"允许"才会执行，超时按拒绝处理。'
+      },
+      {
+        title: '调用审计',
+        content:
+          '每次工具调用都会追加写入本机 JSONL 文件（时间、工具、调用方、耗时、结果），可在页面查看最近记录，也可直接用文本工具打开排查。'
+      },
+      {
+        title: '重新检查',
+        content:
+          '点击"重新检查"会逐项检查服务运行、discovery 文件、socket 权限、TCP 鉴权、桥接二进制与审计写入，用于快速定位"客户端连不上"的问题。'
+      }
+    ],
+    faqs: [
+      {
+        question: '客户端提示"未发现运行中的 Hadice App"？',
+        answer:
+          'MCP 服务内嵌在 App 进程里，必须先启动 Hadice App。启动后再让客户端重连，或在页面点击"重新检查"确认 discovery 文件已写入。'
+      },
+      {
+        question: '为什么调用被拒绝了？',
+        answer:
+          '可能是工具被停用、服务整体停用，或该工具需要人工确认但无人点击允许（超时默认拒绝）。在「调用审计」里可以看到具体的拒绝原因。'
+      }
+    ]
+  },
+
 }
 
 export function getHelpContent(menuId: string): HelpContent | undefined {
